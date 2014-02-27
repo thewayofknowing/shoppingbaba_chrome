@@ -1,0 +1,39 @@
+{
+  "name": "BrowserExtension",
+  "version": "0.0.1",
+  "manifest_version": 2,
+  "description" : "Description ...",
+  "icons": { "16": "icons/16x16.png", "48": "icons/48x48.png", "128": "icons/128x128.png" },
+
+  "omnibox": { "keyword" : "yeah" },
+
+  "browser_action": {
+    "default_icon": {
+      "19": "icons/cart.png"
+    },
+    "default_title": "That's the tool tip",
+    "default_popup": "browseraction/popup.html"
+  },
+
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  },
+  "permissions": [
+   "tabs"
+  ],
+
+  "chrome_url_overrides" : {
+    "newtab": "newtab/newtab.html"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": ["content.js","js/jquery-1.10.2.js","js/jquery-ui-1.10.4.custom.js"],
+      "cs": ["css/smoothness/jquery-ui-1.10.4.custom.css"]
+    }
+  ],
+
+  "devtools_page": "devtools/devtools.html"
+}

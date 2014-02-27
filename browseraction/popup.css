@@ -1,0 +1,16 @@
+header{
+      	margin: -5px;
+      	height: 65px;
+      	width: 250px;
+		border-bottom: 1px solid #e1ddd8;
+		background-image: url(blue.jpg);
+      }
+      #content {
+        padding-top: 5%;
+        text-align: center;
+        cursor: pointer; 
+      }
+      #empty {
+      	padding-top: 5%;
+      	text-align: center;
+      }
