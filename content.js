@@ -1,7 +1,8 @@
 chrome.extension.onMessage.addListener(function(message, sender, sendResponse) {
-	
-		if(message.type == "change") {
-			console.log("Color!!");
+	switch(message.type) {
+		case "colors-div":
+			$( "body" ).prepend( "<div id='shopping-baba' style='position:fixed;  background: url(\"http://1.bp.blogspot.com/--tscpVzcBjo/TdUarKtcAlI/AAAAAAAAA3I/qVkypiYO9rc/s150/w2b_facebookbadge.png\") no-repeat; height:270px; width:245px; padding-bottom:2px; top:15%; right:-200px; z-index: 999999;'></div>" );
+			//console.log("<div id='shopping-baba' style='position:fixed;  background: url(\"icons/fb.png\") no-repeat; margin-left:96%; height:270px; width:245px; top:30%; z-index: 9999;'></div>");
 			var divs = document.querySelectorAll("div");
 			if(divs.length === 0) {
 				alert("There are no any divs in the page.");
@@ -10,18 +11,6 @@ chrome.extension.onMessage.addListener(function(message, sender, sendResponse) {
 				//	divs[i].style.backgroundColor = message.color;
 				}
 			}
-			$( "#dialog-content1" ).dialog("open");
-
-		}
-		else if(message.type == "add") {
-			console.log("Added");
-			$("html").append("<div id='dialog-content1' > Hello </div> ");
-			 $("#dialog-content1").dialog({
-			 	autoOpen : false,
-			 	height: 200,
-			 	position: {at :'right top'}
-			 });
-			 //$(".ui-dialog-titlebar").hide();
-		}
-		
+		break;
+	}
 });

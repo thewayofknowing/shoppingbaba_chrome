@@ -1,0 +1,12 @@
+#shopping-baba  {
+	position: fixed;
+	top: 20%;
+	right: 0;
+	z-index: 9999;
+	height: 10%;
+	width: 5%;
+	border-color: red;
+}
+div {
+	background-color: red;
+}
