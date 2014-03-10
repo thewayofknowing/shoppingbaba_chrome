@@ -86,6 +86,7 @@ function check (id, url, title) {
 }
 
 chrome.tabs.onUpdated.addListener(function(id,changeInfo,tab) {
+	if (changeInfo.status == "complete") {
 		flag = 0;
 		chrome.tabs.sendMessage(tab.id, {type: "colors-div", url:tab.url, title:tab.title}, function(response) {
 			console.log(response);
@@ -97,11 +98,15 @@ chrome.tabs.onUpdated.addListener(function(id,changeInfo,tab) {
 		});
 		console.log("updated/completed: " + tab.url);
 		//check(id, tab.url ,tab.title);
+	}
 	
 });
 
-chrome.tabs.onActivated.addListener(function(tab) {
-	flag = 0;
-	check(tab.id, tab.url, tab.title);
+chrome.tabs.onActivated.addListener(function(tabd) {
+	chrome.tabs.getSelected(null, function(tab) {
+		console.log("Activated");
+		flag = 0;
+		check(tab.id, tab.url, tab.title);		
+	});
 });
 

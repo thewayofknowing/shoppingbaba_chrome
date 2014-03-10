@@ -5,22 +5,22 @@ chrome.extension.onMessage.addListener(function(message, sender, sendResponse) {
 
 
 			var panel;           //The popup on mouseover
-			var content_css = "padding-top: 5%;padding-bottom: 5%;text-align: center;vertical-align: center;cursor: pointer;color: #000099;";
-			var header_css = "border-bottom: 1px solid #e1ddd8; height:65px; background-color: #0066CC;";
-			var main_css = "position:fixed; top:6.5%; border: 1px solid #e1ddd8;  z-index: 9999999; width:250px; height:155px; right:-250px";
+			var content_css = "cursor:pointer; padding-top:5%; padding-bottom:5%; text-align:center; vertical-align:center; color:#000099;";
+			var header_css = "border-bottom: 1px solid #e1ddd8; border-radius:8px; height:65px; background-color: #0066CC;";
+			var main_css = "position:fixed; background-color:#FFFFFF; top:6.5%; border: 1px solid #e1ddd8; border-radius:8px;  z-index: 999997; width:250px; height:155px; right:-250px";
 
-
+			var merchant_data;
 			if (true) {
 				  var url = "" + message.url;    //url of current tab
 				  var title = message.title;
-				  if (url!="" && !(url.indexOf("ads")!=-1 || url.indexOf("google")!=-1)) {
+				  if (url!="" && !(url.indexOf("ads")!=-1)) {
 					  console.log("url: " + url + "\ntitle: " + title);
 					  //var message = "Sorry. No coupons Found";      //message displayed in popup
 					  var flag = 0;                     // flag=1 when website matches list of options
 					  
 					  for (var i=0; i<split.length-1; i++) {
 
-					  	var merchant_data = split[i].split(",");
+					  	merchant_data = split[i].split(",");
 					  	var compare;                //to check with the url
 					  	
 					    if(merchant_data[0].indexOf("|")!=-1) {      //for ambiguous cases like yatra
@@ -45,6 +45,7 @@ chrome.extension.onMessage.addListener(function(message, sender, sendResponse) {
 									 + '">' + merchant_data[2] + '</div></div>';
 						  //console.log("Panel: " + panel);
 					      console.log("match found at Index:" + i);
+					      break;
 					    }
 					  }
 					  if (flag == 1) {
@@ -53,22 +54,31 @@ chrome.extension.onMessage.addListener(function(message, sender, sendResponse) {
 							//document.addEventListener('DOMContentLoaded', function() {
 								var elemDiv = document.createElement('div');
 								elemDiv.id = "shoppingbaba_tab"
-								elemDiv.style.cssText = 'position:fixed;'
+								elemDiv.style.cssText = 'position:fixed; cursor:pointer;'
 														+' background: url("http://1.bp.blogspot.com/--tscpVzcBjo/TdUarKtcAlI/AAAAAAAAA3I/qVkypiYO9rc/s150/w2b_facebookbadge.png")'
-														+' no-repeat; height:145px; width:295px; padding-bottom:2px;'
-														+' padding-top:2px;top:7%; right:-250px; z-index: 99999999;';
+														+ ''
+														+' no-repeat; height:160px; width:295px; padding-bottom:2px;'
+														+' padding-top:2px;top:7%; right:-250px; z-index: 9999999;';
 								document.body.appendChild(elemDiv);	
 								$("body").append(panel);
+								
+								//Mouse over, popup Animation
 								$("#shoppingbaba_tab").on("mouseover", function(){
 									//console.log("Mouseover");
 									$( '#shoppingbaba_main' ).animate({right: "0px"}, 500);
 									$('#shoppingbaba_tab').animate({right:"+=252px"}, 500);
 								});
+								//Mouse out, popup Animation
 								$("#shoppingbaba_tab").on("mouseout", function(){
 									//console.log("MouseOut");
 									$( '#shoppingbaba_main' ).animate({right: "-250px"}, 500);
 									$('#shoppingbaba_tab').animate({right:"-=252px"}, 500);
 								});
+								//Click to go to store
+								$("#shoppingbaba_tab").on("click", function() {
+									window.open("http://www.shoppingbaba.in/stores/" + merchant_data[1], "_blank");
+								});
+
 								sendResponse({change:"true"});
 
 				
@@ -76,9 +86,12 @@ chrome.extension.onMessage.addListener(function(message, sender, sendResponse) {
 							//document.body.innerHTML += "<div id='shopping-baba' style='position:fixed;  background: url(\"http://1.bp.blogspot.com/--tscpVzcBjo/TdUarKtcAlI/AAAAAAAAA3I/qVkypiYO9rc/s150/w2b_facebookbadge.png\") no-repeat; height:270px; width:245px; padding-bottom:2px; padding-top:2px; top:15%; right:-200px; z-index: 999999;'></div>" ;
 							//window.alert("BINGO");
 					}
+					else {
+					 	sendResponse({change:"false"});
+					}
 				}
 			}
-			sendResponse({change:"false"});
+								
 		break;
 	  }
 	}
