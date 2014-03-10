@@ -7,16 +7,13 @@ var searching_images = ['icons/alert.gif',
            				];
 var image_index = 1 ;
 var timeout;
+var flag = 0;
+
 //Reset the alert
 function reset(id) {
 	if(timeout)
 		clearTimeout(timeout);
-	chrome.tabs.getSelected(chrome.windows.WINDOW_ID_CURRENT, function(tab) {
-		chrome.browserAction.setIcon({path:"icons/cart.png"});
-		//chrome.browserAction.setBadgeText({text: "blue!"});
-		//chrome.browserAction.setPopup({tabId: id, popup: "browseraction/empty.html"});
-		//chrome.tabs.sendMessage(tab.id, {type : "reset"});
-	});
+	chrome.browserAction.setIcon({tabId: id, path:"icons/cart.png"});
 }
 
 //Animated alert 
@@ -49,7 +46,7 @@ function check (id, url, title) {
 	for (var item=0; item<list.length -1 ; item++) {
 		//console.log(list[item]);
 		var item_list = list[item].split(",");
-		
+
 		var compare;                //to check with the url
 	  	if(item_list[0].indexOf("|")!=-1) {
 	  		compare = item_list[0].split("|")[0];
@@ -76,11 +73,11 @@ function check (id, url, title) {
 	  if (flag == 1) {
 	    console.log("Changed: " + url);
 	    //rotateIcon(id);
-        chrome.tabs.sendMessage(id,{type: "colors-div", color: "#F00"});
-	   	chrome.browserAction.setBadgeText({text: "red!"});
-	   	if(timeout)
+        if(timeout)
 			clearTimeout(timeout);
-	   	rotateIcon(id);
+       	rotateIcon(id);
+	   	//chrome.browserAction.setBadgeText({text: "red!"});
+	   	
 	  }
 	  else { 
 	  	//Incase of reactivation of tab, if the previous one was a match
@@ -89,19 +86,22 @@ function check (id, url, title) {
 }
 
 chrome.tabs.onUpdated.addListener(function(id,changeInfo,tab) {
-	if (changeInfo.status == "loading" || changeInfo.status == "complete") {
-		//chrome.tabs.sendMessage(tab.id, {type: "colors-div", color: "#F00"});
-		console.log("updated/completed: " + tab.url);
 		flag = 0;
-		check(id, tab.url ,tab.title);
-	}
+		chrome.tabs.sendMessage(tab.id, {type: "colors-div", url:tab.url, title:tab.title}, function(response) {
+			console.log(response);
+			if ( response && response.change == "true") {
+				flag = 1;
+				rotateIcon(id);	
+			}
+        	
+		});
+		console.log("updated/completed: " + tab.url);
+		//check(id, tab.url ,tab.title);
+	
 });
 
-// send a message to the content script
-var colorDivs = function() {
-	chrome.tabs.getSelected(null, function(tab){
-	    chrome.tabs.sendMessage(tab.id, {type: "colors-div", color: "#F00"});
-	    // setting a badge
-		chrome.browserAction.setBadgeText({text: "red!"});
-	});
-}
+chrome.tabs.onActivated.addListener(function(tab) {
+	flag = 0;
+	check(tab.id, tab.url, tab.title);
+});
+
