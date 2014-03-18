@@ -1,9 +1,8 @@
 {
-  "name": "BrowserExtension",
-  "version": "1.0.1",
+  "name": "Shopping Baba",
+  "version": "1.0.0",
   "manifest_version": 2,
   "description" : "Description ...",
-  "icons": { "16": "icons/16x16.png", "48": "icons/48x48.png", "128": "icons/128x128.png" },
 
 
   "browser_action": {
@@ -17,18 +16,17 @@
     "scripts": ["background.js"],
     "persistent": true
   },
+   "web_accessible_resources": ["icons/pop-up.png","icons/logo.png"] ,
   "permissions": ["tabs"],
 
-  "chrome_url_overrides" : {
-    "newtab": "newtab/newtab.html"
-  },
+ 
 
   "content_scripts": [
     {
       "matches": ["http://*/*", "https://*/*"],
+      "run_at": "document_start",
       "js": ["content.js","jquery.js"]
     }
-  ],
+  ]
 
-  "devtools_page": "devtools/devtools.html"
 }
